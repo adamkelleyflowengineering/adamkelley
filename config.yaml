@@ -1,0 +1,33 @@
+# =============================================================================
+# EV Fast-Charge Thermal Margin — Design Parameters
+# =============================================================================
+# This is the file you edit. Change a value, commit, and Flow's analysis agent
+# will re-evaluate whether the pack stays within its thermal safety limit.
+#
+# The single most important knob is `charge_c_rate`. Raising it charges the
+# pack faster but generates more I2R heat in every cell. Push it too high and
+# the steady-state cell temperature crosses `max_safe_cell_temp_c` and the
+# design FAILS.
+#
+#   Try it:  charge_c_rate: 1.5  -> PASS (comfortable margin)
+#            charge_c_rate: 3.0  -> FAIL (exceeds thermal limit)
+# =============================================================================
+
+# ---- The knob to turn -------------------------------------------------------
+charge_c_rate: 1.5          # Charge rate in C (1C = full charge in 1 hour)
+
+# ---- Operating environment --------------------------------------------------
+ambient_temp_c: 25.0        # Ambient / coolant inlet temperature (deg C)
+coolant_flow_lpm: 8.0       # Coolant flow rate through the pack (litres/min)
+
+# ---- Pack architecture ------------------------------------------------------
+pack_capacity_kwh: 75.0     # Usable pack energy (kWh)
+num_cells_series: 96        # Cells in series (sets pack voltage)
+num_cells_parallel: 46      # Cells in parallel (sets pack capacity)
+cell_nominal_voltage: 3.7   # Nominal cell voltage (V)
+
+# ---- Cell characteristics ---------------------------------------------------
+cell_internal_resistance_mohm: 1.2   # DC internal resistance per cell (milliohm)
+
+# ---- Safety limit -----------------------------------------------------------
+max_safe_cell_temp_c: 55.0  # Above this, accelerated ageing / thermal risk

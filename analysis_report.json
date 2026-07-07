@@ -1,0 +1,11 @@
+{
+  "charge_c_rate": 1.5,
+  "charge_current_per_cell_a": 6.89,
+  "heat_per_cell_w": 0.057,
+  "cooling_coefficient_w_per_c": 0.007,
+  "temp_rise_c": 8.13,
+  "peak_cell_temp_c": 33.13,
+  "max_safe_cell_temp_c": 55.0,
+  "thermal_margin_c": 21.87,
+  "verdict": "PASS"
+}
