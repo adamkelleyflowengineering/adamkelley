@@ -29,7 +29,7 @@ from dataclasses import asdict, dataclass
 # =============================================================================
 
 # ---- The knob to turn -------------------------------------------------------
-TARGET_TRIP_KM = 300.0          # Planned trip distance (km)
+TARGET_TRIP_KM = 480.0          # Planned trip distance (km)
 
 # ---- Trip conditions --------------------------------------------------------
 AMBIENT_TEMP_C = 20.0           # Outside air temperature (deg C). Cold cuts range.
