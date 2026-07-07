@@ -1,0 +1,12 @@
+{
+  "target_trip_km": 300.0,
+  "ambient_temp_c": 20.0,
+  "usable_capacity_kwh": 75.0,
+  "consumption_wh_per_km": 164.5,
+  "estimated_range_km": 455.9,
+  "energy_needed_kwh": 49.35,
+  "arrival_charge_fraction": 0.342,
+  "required_reserve_fraction": 0.15,
+  "reserve_margin_km": 87.5,
+  "verdict": "PASS"
+}
