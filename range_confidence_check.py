@@ -32,7 +32,7 @@ from dataclasses import asdict, dataclass
 TARGET_TRIP_KM = 300.0          # Planned trip distance (km)
 
 # ---- Trip conditions --------------------------------------------------------
-AMBIENT_TEMP_C = 20.0           # Outside air temperature (deg C). Cold cuts range.
+AMBIENT_TEMP_C = 0.0           # Outside air temperature (deg C). Cold cuts range.
 PAYLOAD_KG = 150.0              # Passengers + cargo above curb weight (kg)
 AVG_SPEED_KMH = 100.0           # Average cruising speed (km/h). Faster = more drag.
 
