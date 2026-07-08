@@ -1,21 +1,4 @@
-#!/usr/bin/env python3
-"""EV Range Trade Study — single-file Flow / GitHub analysis example.
 
-A trade study asks: "If I change one top-level requirement, what does it cost
-me everywhere else?" Here the requirement is the vehicle's **design range**.
-Push the range up and you need a bigger battery, which adds mass, adds cost,
-lengthens charge time, and slows acceleration. Each of those has a budget, and
-the study reports whether the design still closes.
-
-Everything is in this one file. The knob is `TARGET_RANGE_MI` at the top.
-
-    TARGET_RANGE_MI = 250  -> all budgets met                    -> PASS
-    TARGET_RANGE_MI = 300  -> mass, cost & charge budgets broken  -> FAIL
-
-Running it prints a trade-study table, writes `trade_study_report.json`
-(machine-readable, for an analysis agent), and exits non-zero if any budget is
-exceeded so a CI check / PR gate can flag it. Pure standard library.
-"""
 
 from __future__ import annotations
 
@@ -24,7 +7,7 @@ import os
 from dataclasses import asdict, dataclass
 
 # =============================================================================
-# DESIGN INPUT — this is what you change in the PR
+# DESIGN INPUT — 
 # =============================================================================
 
 TARGET_RANGE_MI = 250.0          # Vehicle design range requirement (miles)
