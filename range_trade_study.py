@@ -27,7 +27,7 @@ from dataclasses import asdict, dataclass
 # DESIGN INPUT — this is what you change in the PR
 # =============================================================================
 
-TARGET_RANGE_KM = 250.0          # Vehicle design range requirement (km)
+TARGET_RANGE_KM = 300.0          # Vehicle design range requirement (km)
 
 # =============================================================================
 # FIXED ASSUMPTIONS (the rest of the vehicle definition)
