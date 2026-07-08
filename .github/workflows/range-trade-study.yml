@@ -69,8 +69,8 @@ jobs:
             }).join('\n');
 
             const rangeLine = before
-              ? `**Design range:** ${before.target_range_km} km → **${after.target_range_km} km**`
-              : `**Design range:** ${after.target_range_km} km`;
+              ? `**Design range:** ${before.target_range_mi} mi → **${after.target_range_mi} mi**`
+              : `**Design range:** ${after.target_range_mi} mi`;
             const capLine = before
               ? `**Battery capacity:** ${before.battery_capacity_kwh} kWh → **${after.battery_capacity_kwh} kWh**`
               : `**Battery capacity:** ${after.battery_capacity_kwh} kWh`;
