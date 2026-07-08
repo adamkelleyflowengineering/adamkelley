@@ -1,0 +1,35 @@
+{
+  "target_range_km": 250.0,
+  "battery_capacity_kwh": 40.0,
+  "metrics": [
+    {
+      "name": "Curb mass",
+      "value": 1750.0,
+      "unit": "kg",
+      "budget": 1780.0,
+      "within_budget": true
+    },
+    {
+      "name": "Battery cost",
+      "value": 5200.0,
+      "unit": "USD",
+      "budget": 6000.0,
+      "within_budget": true
+    },
+    {
+      "name": "Fast-charge 10-80%",
+      "value": 11.2,
+      "unit": "min",
+      "budget": 20.0,
+      "within_budget": true
+    },
+    {
+      "name": "0-100 km/h",
+      "value": 6.5,
+      "unit": "s",
+      "budget": 7.0,
+      "within_budget": true
+    }
+  ],
+  "verdict": "PASS"
+}

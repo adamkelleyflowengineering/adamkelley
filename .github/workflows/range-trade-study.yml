@@ -1,0 +1,112 @@
+name: Range Trade Study
+
+# The demo: open a PR that changes TARGET_RANGE_KM in range_trade_study.py.
+# GitHub triggers this workflow, which runs the trade study on BOTH the base
+# branch (before) and the PR head (after), then posts a before/after comparison
+# comment on the PR. That comment is the visible "the PR triggered the check
+# and it analysed my change" moment.
+on:
+  pull_request:
+    paths:
+      - "range_trade_study.py"
+      - ".github/workflows/range-trade-study.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write   # needed to post the comparison comment
+
+jobs:
+  trade-study:
+    runs-on: ubuntu-latest
+    steps:
+      # Full history so we can also check out the PR's base commit.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Run the study on the PR head (the proposed change).
+      - name: Trade study — PR head (after)
+        run: |
+          python range_trade_study.py || true   # keep going even if it FAILs
+          mv trade_study_report.json head_report.json
+
+      # Run the study on the base commit (the current design) via a worktree,
+      # so we can show what changed rather than just the new numbers.
+      - name: Trade study — base (before)
+        if: github.event_name == 'pull_request'
+        run: |
+          git worktree add base_tree ${{ github.event.pull_request.base.sha }}
+          ( cd base_tree && python range_trade_study.py || true )
+          cp base_tree/trade_study_report.json base_report.json || echo '{}' > base_report.json
+
+      # Post (or update) a single comparison comment on the PR.
+      - name: Comment before/after on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const read = (p) => { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; } };
+            const after = read('head_report.json');
+            const before = read('base_report.json');
+            if (!after) { core.setFailed('No head report produced'); return; }
+
+            // Index metrics by name so we can align before vs. after.
+            const idx = (r) => Object.fromEntries((r?.metrics ?? []).map(m => [m.name, m]));
+            const b = idx(before), a = idx(after);
+
+            const arrow = (m) => m.within_budget ? '✅' : '❌';
+            const rows = after.metrics.map(m => {
+              const prev = b[m.name];
+              const beforeCell = prev ? `${prev.value} ${prev.unit} ${arrow(prev)}` : '—';
+              const afterCell = `${m.value} ${m.unit} ${arrow(m)}`;
+              return `| ${m.name} | ${beforeCell} | ${afterCell} | ${m.budget} ${m.unit} |`;
+            }).join('\n');
+
+            const rangeLine = before
+              ? `**Design range:** ${before.target_range_km} km → **${after.target_range_km} km**`
+              : `**Design range:** ${after.target_range_km} km`;
+            const capLine = before
+              ? `**Battery capacity:** ${before.battery_capacity_kwh} kWh → **${after.battery_capacity_kwh} kWh**`
+              : `**Battery capacity:** ${after.battery_capacity_kwh} kWh`;
+
+            const body = [
+              '<!-- range-trade-study -->',
+              '## 🔋 Range Trade Study',
+              rangeLine,
+              capLine,
+              '',
+              '| Metric | Before | After | Budget |',
+              '| --- | --- | --- | --- |',
+              rows,
+              '',
+              `**Design ${after.verdict === 'PASS' ? 'closes ✅' : 'does NOT close ❌'}** — verdict: \`${after.verdict}\``,
+            ].join('\n');
+
+            // Upsert: reuse our marker comment if it already exists.
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.rest.issues.listComments({ owner, repo, issue_number });
+            const mine = comments.data.find(c => c.body.includes('<!-- range-trade-study -->'));
+            if (mine) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
+
+      # Turn the check red when the design no longer closes, so the PR shows a
+      # failing status alongside the explanatory comment.
+      - name: Gate on verdict
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, sys
+          r = json.load(open('head_report.json'))
+          print('Verdict:', r['verdict'])
+          sys.exit(0 if r['verdict'] == 'PASS' else 1)
+          PY
