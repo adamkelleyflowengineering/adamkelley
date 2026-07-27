@@ -10,7 +10,7 @@ from dataclasses import asdict, dataclass
 # DESIGN INPUT — 
 # =============================================================================
 
-TARGET_RANGE_MI = 250.0          # Vehicle design range requirement (miles)
+TARGET_RANGE_MI = 300.0          # Vehicle design range requirement (miles)
 
 # =============================================================================
 # FIXED ASSUMPTIONS (the rest of the vehicle definition)
