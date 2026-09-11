@@ -10,7 +10,7 @@ from dataclasses import asdict, dataclass
 # DESIGN INPUT — 
 # =============================================================================
 
-TARGET_RANGE_MI = 250.0          # Vehicle design range requirement (miles)
+TARGET_RANGE_MI = 300.0          # Vehicle design range requirement (miles)
 
 # =============================================================================
 # FIXED ASSUMPTIONS (the rest of the vehicle definition)
@@ -100,7 +100,7 @@ def evaluate() -> TradeStudyResult:
 def render_table(result: TradeStudyResult) -> str:
     """Human-readable trade-study table for logs and the CI console."""
     header = (
-        f"EV Range Trade Study  —  design range = {result.target_range_mi} miles\n"
+        f"EV Range Trade Study  \u2014  design range = {result.target_range_mi} miles\n"
         f"Required battery capacity: {result.battery_capacity_kwh} kWh\n"
         + "=" * 60
     )
